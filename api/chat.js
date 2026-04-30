@@ -107,6 +107,18 @@ async function callOpenAI({ message, history }) {
 }
 
 export default async function handler(request) {
+  if (isNodeResponse(arguments[1])) {
+    return handleNodeRequest(request, arguments[1]);
+  }
+
+  return handleWebRequest(request);
+}
+
+function isNodeResponse(response) {
+  return response && typeof response.status === "function" && typeof response.json === "function";
+}
+
+async function handleWebRequest(request) {
   if (request.method !== "POST") {
     return jsonResponse(405, { error: "Use POST." });
   }
@@ -156,4 +168,21 @@ export default async function handler(request) {
       reason: "server_error"
     });
   }
+}
+
+async function handleNodeRequest(request, response) {
+  const webRequest = {
+    method: request.method,
+    async json() {
+      return request.body || {};
+    }
+  };
+
+  const webResponse = await handleWebRequest(webRequest);
+  const payload = await webResponse.json();
+
+  response
+    .status(webResponse.status)
+    .setHeader("cache-control", "no-store")
+    .json(payload);
 }
