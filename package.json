@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev-server.js",
-    "check": "node scripts/check-config.js"
+    "check": "node scripts/check-config.js",
+    "create-vector-store": "node scripts/create-vector-store.js"
   },
   "engines": {
     "node": ">=20"

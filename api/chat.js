@@ -36,15 +36,85 @@ function shouldEscalateLocally(message) {
 function buildInstructions() {
   return [
     "You are the Stern Grove Festival patron support chatbot.",
-    "Answer only from retrieved Stern Grove Source Pack content.",
+    "Answer only from the approved Stern Grove Source Pack excerpts provided in the current request.",
     "Never answer from general web knowledge.",
     "Never invent policy, deadlines, addresses, links, exceptions, outcomes, or personal status.",
+    "Preserve numbers, dimensions, dates, times, prices, addresses, and email addresses exactly as shown in the excerpts.",
     "Start with the direct answer and keep it concise.",
     "If the answer is not clearly supported, use the required escalation copy exactly.",
     "Never print the raw Patron Experience Form URL in answer text.",
     "After every substantive answer, ask: Did this answer your question?",
     "Use a warm, direct, respectful, calm, and clear tone."
   ].join("\n");
+}
+
+function buildSearchQuery(message) {
+  const expansions = [];
+
+  if (/\b(bring|allowed|allow|prohibited|ban|blanket|chair|cooler|food|drink|alcohol|pet|stroller|umbrella|tarp)\b/i.test(message)) {
+    expansions.push("Stern Grove What to Bring allowed items prohibited items blankets low-profile lawn chairs picnics coolers food beverages alcohol strollers tarps pets umbrellas");
+  }
+
+  if (/\b(ticket|lottery|tickets|entry|qr|capacity|winner|win)\b/i.test(message)) {
+    expansions.push("Stern Grove ticketing and lottery free General Admission ticket QR code entry capacity winners");
+  }
+
+  if (/\b(parking|muni|bart|bike|shuttle|entrance|gate|transport|getting here)\b/i.test(message)) {
+    expansions.push("Stern Grove getting here transportation parking MUNI BART bike valet shuttle entrances gates");
+  }
+
+  if (/\b(accessible|accessibility|ada|wheelchair|senior|disability)\b/i.test(message)) {
+    expansions.push("Stern Grove accessibility ADA wheelchair seating senior seating shuttle ADA parking");
+  }
+
+  if (/\b(seat|seating|meadow|table|reserved)\b/i.test(message)) {
+    expansions.push("Stern Grove seating information General Admission Concert Meadow Hillside West Meadow reserved tables");
+  }
+
+  if (/\b(lineup|artist|show|concert|date|schedule|season|perform)\b/i.test(message)) {
+    expansions.push("Stern Grove 2026 season lineup concert dates artists lottery open close");
+  }
+
+  return [message, ...expansions].join(" ");
+}
+
+async function searchSourcePack({ apiKey, vectorStoreId, message }) {
+  const response = await fetch(`https://api.openai.com/v1/vector_stores/${vectorStoreId}/search`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      "content-type": "application/json"
+    },
+    body: JSON.stringify({
+      query: buildSearchQuery(message),
+      max_num_results: 4
+    })
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`OpenAI vector search failed: ${response.status} ${details}`);
+  }
+
+  const data = await response.json();
+  return (data.data || [])
+    .map((result) => ({
+      filename: result.filename,
+      text: (result.content || [])
+        .map((part) => part.text || "")
+        .join("\n")
+        .trim()
+    }))
+    .filter((result) => result.text);
+}
+
+function buildSourceContext(results) {
+  return results
+    .map((result, index) => [
+      `Source Pack excerpt ${index + 1}: ${result.filename}`,
+      result.text
+    ].join("\n"))
+    .join("\n\n---\n\n");
 }
 
 async function callOpenAI({ message, history }) {
@@ -57,6 +127,15 @@ async function callOpenAI({ message, history }) {
       reply:
         "Local prototype is running, but OpenAI credentials and the Source Pack vector store are not connected yet. Please use the Ask a Staff Member button for now.",
       mode: "stub"
+    };
+  }
+
+  const sourceResults = await searchSourcePack({ apiKey, vectorStoreId, message });
+
+  if (!sourceResults.length) {
+    return {
+      reply: ESCALATION_COPY.cannotAnswer,
+      mode: "openai"
     };
   }
 
@@ -74,13 +153,14 @@ async function callOpenAI({ message, history }) {
           role: item.role,
           content: item.content
         })),
-        { role: "user", content: message }
-      ],
-      tools: [
         {
-          type: "file_search",
-          vector_store_ids: [vectorStoreId],
-          max_num_results: 4
+          role: "user",
+          content: [
+            "Approved Source Pack excerpts:",
+            buildSourceContext(sourceResults),
+            "",
+            `Patron question: ${message}`
+          ].join("\n")
         }
       ],
       max_output_tokens: 450
