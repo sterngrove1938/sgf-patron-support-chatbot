@@ -144,8 +144,7 @@ h1 {
 }
 
 .sgf-chat__staff,
-.sgf-chat__send,
-.sgf-chat__quick {
+.sgf-chat__send {
   min-height: 40px;
   border-radius: 8px;
   border: 1px solid transparent;
@@ -156,18 +155,6 @@ h1 {
   background: var(--sgf-clay);
   color: white;
   font-weight: 700;
-}
-
-.sgf-chat__quick-row {
-  display: flex;
-  gap: 8px;
-}
-
-.sgf-chat__quick {
-  flex: 1;
-  background: white;
-  border-color: var(--sgf-line);
-  color: var(--sgf-ink);
 }
 
 .sgf-chat__form {

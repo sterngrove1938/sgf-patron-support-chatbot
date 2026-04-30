@@ -114,7 +114,8 @@ function buildInstructions() {
     "Start with the direct answer and keep it concise.",
     "If the answer is not clearly supported, use the required escalation copy exactly.",
     "Never print the raw Patron Experience Form URL in answer text.",
-    "After every substantive answer, ask: Did this answer your question?",
+    "Do not end routine answers with: Did this answer your question?",
+    "Only ask 'Did this answer your question?' if the patron clearly appears to be wrapping up the conversation.",
     "Use a warm, direct, respectful, calm, and clear tone."
   ].join("\n");
 }
@@ -188,6 +189,12 @@ function buildSourceContext(results) {
     .join("\n\n---\n\n");
 }
 
+function stripRoutineFollowUp(reply) {
+  return reply
+    .replace(/\s*Did this answer your question\?\s*$/i, "")
+    .trim();
+}
+
 function hasSource(results, filename) {
   return results.some((result) => result.filename === filename);
 }
@@ -196,44 +203,44 @@ function answerFromSourcePack(message, sourceResults) {
   const normalized = message.toLowerCase();
 
   if (/\b(give|forward|send|transfer).*\b(ticket|pdf|qr|friend)\b/i.test(message)) {
-    return "Yes. You may forward your ticket to a friend by sending them the PDF ticket with the unique QR code. As long as they have that QR code, they can get in. Did this answer your question?";
+    return "Yes. You may forward your ticket to a friend by sending them the PDF ticket with the unique QR code. As long as they have that QR code, they can get in.";
   }
 
   const lineupMatch = LINEUP.find((show) => show.aliases.some((alias) => normalized.includes(alias)));
   if (lineupMatch && /\b(what time|go on stage|set time|start time|starts?|stage)\b/i.test(message)) {
-    return "The Source Pack gives the general show schedule: queue opens at 10:00 AM, gates open at 12:00 PM, DJ is at 1:00 PM, and the show is at 2:00 PM. It does not provide artist-specific set times. Did this answer your question?";
+    return "The Source Pack gives the general show schedule: queue opens at 10:00 AM, gates open at 12:00 PM, DJ is at 1:00 PM, and the show is at 2:00 PM. It does not provide artist-specific set times.";
   }
 
   if (/\b(service dog|service animal|support animal)\b/i.test(message)) {
-    return "Yes. Service or support animals are allowed throughout the venue. Leashed pets are allowed in the West Meadow only, not the Concert Meadow. Did this answer your question?";
+    return "Yes. Service or support animals are allowed throughout the venue. Leashed pets are allowed in the West Meadow only, not the Concert Meadow.";
   }
 
   if (/\b(dog|pet|pets)\b/i.test(message)) {
-    return "Leashed pets are allowed in the West Meadow only, not the Concert Meadow. Service or support animals are allowed throughout the venue. Did this answer your question?";
+    return "Leashed pets are allowed in the West Meadow only, not the Concert Meadow. Service or support animals are allowed throughout the venue.";
   }
 
   if (/\b(food for sale|food.*on-?site|vendors?|food trucks?|bar|beer.*sale|wine.*sale|buy food|purchase food)\b/i.test(message)) {
-    return "Yes. Tante's is located in the Esplanade, rotating food trucks are located in the West Meadow, and bars serve beer, wine, and non-alcoholic beverages. Every purchase supports Stern Grove Festival. Did this answer your question?";
+    return "Yes. Tante's is located in the Esplanade, rotating food trucks are located in the West Meadow, and bars serve beer, wine, and non-alcoholic beverages. Every purchase supports Stern Grove Festival.";
   }
 
   if (/\b(own food|own beer|bring.*food|bring.*beer|food and beer|alcohol)\b/i.test(message)) {
-    return "Yes. You may bring your own food, beverages, picnics, and coolers. Alcohol is permitted for patrons of legal drinking age, 21+. Barbecues, grills, and any items with open flame are not allowed. Did this answer your question?";
+    return "Yes. You may bring your own food, beverages, picnics, and coolers. Alcohol is permitted for patrons of legal drinking age, 21+. Barbecues, grills, and any items with open flame are not allowed.";
   }
 
   if (/\b(tent|umbrella|shade structure|shade structures|tarp)\b/i.test(message)) {
-    return "No. Tents, umbrellas, shade structures, and tarps are not allowed. Did this answer your question?";
+    return "No. Tents, umbrellas, shade structures, and tarps are not allowed.";
   }
 
   if (/\b(smoking|smoke|cigarette|vape)\b/i.test(message)) {
-    return "No. Smoking is prohibited at the Grove. Did this answer your question?";
+    return "No. Smoking is prohibited at the Grove.";
   }
 
   if (/\b(drone|drones)\b/i.test(message)) {
-    return "No. Drones are not allowed. Did this answer your question?";
+    return "No. Drones are not allowed.";
   }
 
   if (/\b(folding chair|chair|chairs)\b/i.test(message)) {
-    return "Low-profile lawn chairs are allowed. High-backed or standard folding chairs are not allowed. Did this answer your question?";
+    return "Low-profile lawn chairs are allowed. High-backed or standard folding chairs are not allowed.";
   }
 
   if (/\b(bring|allowed|allow|prohibited|ban|blanket|stroller)\b/i.test(message)) {
@@ -241,17 +248,15 @@ function answerFromSourcePack(message, sourceResults) {
       "You may bring blankets no larger than 5x7 feet, low-profile lawn chairs, picnics, coolers, food, beverages, and alcohol if you are 21+. Strollers are allowed if they are folded during the performance and do not block walkways or aisles.",
       "",
       "Items that are not allowed include tarps, blankets bigger than 5x7 feet, pets in the Concert Meadow, sharp knives with a blade longer than 4 inches, high-backed or standard folding chairs, large or tall tables, tents, umbrellas, shade structures, barbecues, grills, open flame items, recording equipment, unauthorized photography or recording, certain professional camera equipment, bicycles in the Concert Meadow, skateboards, scooters, hoverboards, personal motorized vehicles in the Esplanade or Concert Meadow, firearms or weapons, drones, fireworks, explosives, illegal substances, amplified sound, and smoking.",
-      "",
-      "Did this answer your question?"
     ].join("\n");
   }
 
   if (/\b(muni|metro|bus|public transportation|transit|train)\b/i.test(message)) {
-    return "Take Muni Metro lines M Ocean View or K Ingleside and exit at St. Francis Circle stop, then walk west one block to the park entrance at 19th Avenue and Sloat Boulevard. You can also take Muni Bus lines 23-Monterey or 28-19th Avenue, which stop right at 19th Avenue and Sloat Boulevard. Did this answer your question?";
+    return "Take Muni Metro lines M Ocean View or K Ingleside and exit at St. Francis Circle stop, then walk west one block to the park entrance at 19th Avenue and Sloat Boulevard. You can also take Muni Bus lines 23-Monterey or 28-19th Avenue, which stop right at 19th Avenue and Sloat Boulevard.";
   }
 
   if (lineupMatch) {
-    return `${lineupMatch.artist} is playing on ${lineupMatch.date}. The lottery runs ${lineupMatch.lottery}. Did this answer your question?`;
+    return `${lineupMatch.artist} is playing on ${lineupMatch.date}. The lottery runs ${lineupMatch.lottery}.`;
   }
 
   return "";
@@ -337,7 +342,7 @@ async function callOpenAI({ message, history }) {
       ?.trim();
 
   return {
-    reply: reply || ESCALATION_COPY.cannotAnswer,
+    reply: reply ? stripRoutineFollowUp(reply) : ESCALATION_COPY.cannotAnswer,
     mode: "openai"
   };
 }
@@ -371,6 +376,22 @@ async function handleWebRequest(request) {
 
   if (!message) {
     return jsonResponse(400, { error: "Message is required." });
+  }
+
+  if (/^(yes|yep|yeah|yes thanks|thank you|thanks|that helps|all set|that's all|thats all)$/i.test(message)) {
+    return jsonResponse(200, {
+      reply: "Glad I could help.",
+      escalate: false,
+      reason: "conversation_closed"
+    });
+  }
+
+  if (/^(thanks|thank you).*(all set|that's all|thats all|done)$/i.test(message)) {
+    return jsonResponse(200, {
+      reply: "Glad I could help.",
+      escalate: false,
+      reason: "conversation_closed"
+    });
   }
 
   if (/^(no|nope|not really|that did not help|that doesn't help)$/i.test(message)) {

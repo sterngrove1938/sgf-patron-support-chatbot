@@ -53,10 +53,6 @@
 
       const data = await response.json();
       addMessage("bot", data.reply || "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.");
-
-      if (!data.escalate) {
-        addMessage("bot", "Did this answer your question?");
-      }
     } catch {
       addMessage("bot", "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.");
     } finally {
@@ -82,14 +78,7 @@
   const actions = createElement("div", "sgf-chat__actions");
   const staff = createElement("button", "sgf-chat__staff", "Ask a Staff Member");
   staff.type = "button";
-
-  const quickRow = createElement("div", "sgf-chat__quick-row");
-  const yes = createElement("button", "sgf-chat__quick", "Yes");
-  const no = createElement("button", "sgf-chat__quick", "No");
-  yes.type = "button";
-  no.type = "button";
-  quickRow.append(yes, no);
-  actions.append(staff, quickRow);
+  actions.append(staff);
 
   const form = createElement("form", "sgf-chat__form");
   const input = createElement("input", "sgf-chat__input");
@@ -112,8 +101,6 @@
   launcher.addEventListener("click", () => setOpen(true));
   close.addEventListener("click", () => setOpen(false));
   staff.addEventListener("click", askStaff);
-  yes.addEventListener("click", () => addMessage("bot", "Glad I could help. What else can I help you with?"));
-  no.addEventListener("click", () => sendMessage("No"));
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     sendMessage(input.value);
