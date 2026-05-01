@@ -2,7 +2,7 @@
   const script = document.currentScript;
   const apiBaseUrl = script?.dataset.apiBaseUrl || "";
   const formUrl = "https://forms.gle/aYFRTZbEzBzu76k19";
-  const feedbackSheetUrl = "https://docs.google.com/spreadsheets/d/1nXBEDjKjoBWJU-f6tl0HZK8oLBpBScLy1M9lgc-ogJc/edit";
+  const feedbackFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSf89aX-QlpIDts-sMoTdQNjDwQw-AzKbiQL-WOF34aQOkRBnw/viewform?usp=header";
   const qaMode = new URLSearchParams(window.location.search).has("qa");
 
   const state = {
@@ -174,7 +174,7 @@
   const qaButtons = createElement("div", "sgf-chat__qa-buttons");
   const copyLast = createElement("button", "sgf-chat__qa-button", "Copy last Q&A");
   const copyTranscript = createElement("button", "sgf-chat__qa-button", "Copy transcript");
-  const openFeedback = createElement("button", "sgf-chat__qa-button", "Open feedback sheet");
+  const openFeedback = createElement("button", "sgf-chat__qa-button", "Open feedback form");
   qaStatus = createElement("span", "sgf-chat__qa-status");
   copyLast.type = "button";
   copyTranscript.type = "button";
@@ -206,7 +206,7 @@
   copyLast.addEventListener("click", () => copyText(formatLastExchange()));
   copyTranscript.addEventListener("click", () => copyText(formatTranscript()));
   openFeedback.addEventListener("click", () => {
-    window.open(feedbackSheetUrl, "_blank", "noopener,noreferrer");
+    window.open(feedbackFormUrl, "_blank", "noopener,noreferrer");
   });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
