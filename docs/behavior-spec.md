@@ -35,7 +35,7 @@ Escalate when:
 - The answer is not clearly supported by Source Pack content.
 - The question is personal or case-specific.
 - The user asks for an exception, override, refund decision, or guarantee.
-- Approved materials conflict.
+- Internal source information conflicts.
 - The user says the answer did not help.
 - The issue is sensitive, urgent, or not clearly documented.
 
@@ -44,19 +44,19 @@ Escalate when:
 When the chatbot cannot answer:
 
 ```text
-I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.
+I do not know the answer to that. Please use the Ask a Staff Member button to contact the Stern Grove team.
 ```
 
 When the answer is only partly supported:
 
 ```text
-Here is what I can confirm from Stern Grove's approved information: [confirmed point]. I do not have confirmed information about [missing point]. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.
+I know [known point]. I do not know [missing point]. Please use the Ask a Staff Member button to contact the Stern Grove team.
 ```
 
 When the user says the answer did not help:
 
 ```text
-I am sorry that did not solve it. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.
+I am sorry that did not solve it. Please use the Ask a Staff Member button to contact the Stern Grove team.
 ```
 
 ## Handoff

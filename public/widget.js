@@ -134,12 +134,12 @@
 
       const data = await response.json();
       removeTypingIndicator(typing);
-      const reply = data.reply || "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.";
+      const reply = data.reply || "I do not know the answer to that. Please use the Ask a Staff Member button to contact the Stern Grove team.";
       addMessage("bot", reply);
       state.lastExchange = { question: message, answer: reply };
     } catch {
       removeTypingIndicator(typing);
-      const reply = "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.";
+      const reply = "I do not know the answer to that. Please use the Ask a Staff Member button to contact the Stern Grove team.";
       addMessage("bot", reply);
       state.lastExchange = { question: message, answer: reply };
     } finally {

@@ -2,9 +2,9 @@ const DEFAULT_MODEL = "gpt-5.4-mini";
 
 const ESCALATION_COPY = {
   cannotAnswer:
-    "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.",
+    "I do not know the answer to that. Please use the Ask a Staff Member button to contact the Stern Grove team.",
   didNotHelp:
-    "I am sorry that did not solve it. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form."
+    "I am sorry that did not solve it. Please use the Ask a Staff Member button to contact the Stern Grove team."
 };
 
 const HIGH_RISK_PATTERNS = [
@@ -107,12 +107,13 @@ function shouldEscalateLocally(message) {
 function buildInstructions() {
   return [
     "You are the Stern Grove Festival patron support chatbot.",
-    "Answer only from the approved Stern Grove Source Pack excerpts provided in the current request.",
+    "Answer only from the Stern Grove Festival information provided in the current request.",
     "Never answer from general web knowledge.",
     "Never invent policy, deadlines, addresses, links, exceptions, outcomes, or personal status.",
-    "Preserve numbers, dimensions, dates, times, prices, addresses, and email addresses exactly as shown in the excerpts.",
+    "Preserve numbers, dimensions, dates, times, prices, addresses, and email addresses exactly as shown.",
     "Start with the direct answer and keep it concise.",
-    "If the answer is not clearly supported, use the required escalation copy exactly.",
+    "If the answer is not clearly available, use the required escalation copy exactly.",
+    "Do not mention source packs, approved materials, source material, excerpts, documents, references, internal guidance, or how you know or do not know something.",
     "Never print the raw Patron Experience Form URL in answer text.",
     "Do not end routine answers with: Did this answer your question?",
     "Only ask 'Did this answer your question?' if the patron clearly appears to be wrapping up the conversation.",
@@ -183,7 +184,7 @@ async function searchSourcePack({ apiKey, vectorStoreId, message }) {
 function buildSourceContext(results) {
   return results
     .map((result, index) => [
-      `Source Pack excerpt ${index + 1}: ${result.filename}`,
+      `Festival information ${index + 1}: ${result.filename}`,
       result.text
     ].join("\n"))
     .join("\n\n---\n\n");
@@ -231,7 +232,7 @@ function answerFromSourcePack(message, sourceResults) {
   }
 
   if (/\b(gates open|gate open|queue|dj|show time|what time.*show|schedule)\b/i.test(message)) {
-    return "Queue opens at 10:00 AM, gates open at 12:00 PM, DJ is at 1:00 PM, and the show is at 2:00 PM.";
+    return "Queue opens at 10:00 AM, gates open at 12:00 PM, the DJ starts at 1:00 PM, and the opening act begins at 2:00 PM.";
   }
 
   if (/\b(bart)\b/i.test(message)) {
@@ -276,7 +277,7 @@ function answerFromSourcePack(message, sourceResults) {
 
   const lineupMatch = LINEUP.find((show) => show.aliases.some((alias) => normalized.includes(alias)));
   if (lineupMatch && /\b(what time|go on stage|set time|start time|starts?|stage)\b/i.test(message)) {
-    return "The Source Pack gives the general show schedule: queue opens at 10:00 AM, gates open at 12:00 PM, DJ is at 1:00 PM, and the show is at 2:00 PM. It does not provide artist-specific set times.";
+    return "The general show schedule is: queue opens at 10:00 AM, gates open at 12:00 PM, the DJ starts at 1:00 PM, and the opening act begins at 2:00 PM.";
   }
 
   if (/\b(service dog|service animal|support animal)\b/i.test(message)) {
@@ -338,7 +339,7 @@ async function callOpenAI({ message, history }) {
   if (!apiKey || !vectorStoreId) {
     return {
       reply:
-        "Local prototype is running, but OpenAI credentials and the Source Pack vector store are not connected yet. Please use the Ask a Staff Member button for now.",
+        "I do not know the answer to that right now. Please use the Ask a Staff Member button to contact the Stern Grove team.",
       mode: "stub"
     };
   }
@@ -385,7 +386,7 @@ async function callOpenAI({ message, history }) {
         {
           role: "user",
           content: [
-            "Approved Source Pack excerpts:",
+            "Stern Grove Festival information:",
             buildSourceContext(sourceResults),
             "",
             `Patron question: ${message}`
