@@ -202,8 +202,76 @@ function hasSource(results, filename) {
 function answerFromSourcePack(message, sourceResults) {
   const normalized = message.toLowerCase();
 
+  if (/\b(free ticket|free tickets|get.*ticket|ga lottery|general admission lottery)\b/i.test(message)) {
+    return "Stern Grove Festival concerts are free, but entry requires a free General Admission ticket obtained through a random lottery. Each concert has its own separate lottery, and you must register individually for every show you want to attend. Lotteries open on a rolling basis throughout the season, starting in early May.";
+  }
+
+  if (/\b(kids|children|child|infant|baby).*\b(ticket|tickets|own ticket)\b/i.test(message)) {
+    return "Children 3 and older need a ticket, and every attendee needs a free ticket to enter the venue. An infant held in someone's arms does not count toward the seat count. Any child who needs their own seat or space does count.";
+  }
+
+  if (/\b(random|demographic|answers affect|chances|past entries|wins|losses)\b/i.test(message)) {
+    return "Yes. The lottery is completely random. Demographic-question answers do not affect your chances, and past entries, wins, or losses do not affect your chances. Every entry is a fresh start.";
+  }
+
   if (/\b(give|forward|send|transfer).*\b(ticket|pdf|qr|friend)\b/i.test(message)) {
     return "Yes. You may forward your ticket to a friend by sending them the PDF ticket with the unique QR code. As long as they have that QR code, they can get in.";
+  }
+
+  if (/\b(how much|cost|price|pricing).*\b(reserved picnic table|reserved table|picnic table|community table|standard table|premium table)\b/i.test(message) || /\b(reserved picnic table|reserved table|picnic table|community table|standard table|premium table).*\b(cost|price|how much|pricing)\b/i.test(message)) {
+    return "Reserved table pricing is $200 for a Community Table Seat, $2,000 for a Standard Table that seats 10, and $4,000 for a Premium Table that seats 10. Prices increase during Big Picnic Weekend due to elevated production and hospitality offerings.";
+  }
+
+  if (/\b(map|pick|choose|select).*\b(table|seat)\b/i.test(message) || /\b(table|seat).*\b(map|pick|choose|select)\b/i.test(message)) {
+    return "No. Tables are assigned by the team based on availability, table level, date of reservation, and accessibility needs. Map-based selection is not available.";
+  }
+
+  if (/\b(book|reserve|purchase|get).*\b(reserved table|picnic table|table)\b/i.test(message)) {
+    return "Reserved tables can be reserved by making a donation through each show's page. For reserved table questions, contact development@sterngrove.org or call 415-625-6006.";
+  }
+
+  if (/\b(gates open|gate open|queue|dj|show time|what time.*show|schedule)\b/i.test(message)) {
+    return "Queue opens at 10:00 AM, gates open at 12:00 PM, DJ is at 1:00 PM, and the show is at 2:00 PM.";
+  }
+
+  if (/\b(bart)\b/i.test(message)) {
+    return "Yes. You can take BART to Civic Center and transfer to Muni Metro M Ocean View or K Ingleside; take BART to Glen Park Station and transfer to MUNI bus 23-Monterey; or take BART to Daly City and transfer to MUNI bus 28-19th Avenue.";
+  }
+
+  if (/\b(bike|biking|bicycle|bike valet)\b/i.test(message)) {
+    return "Yes. Biking is encouraged. There is a free Bike Valet located at 21st and Wawona, open from 11:00 AM to 1 hour after the show. Bicycles are not allowed in the Concert Meadow, so please store bicycles at the bike valet.";
+  }
+
+  if (/\b(ada placard|ada parking|accessible parking)\b/i.test(message)) {
+    return "ADA Parking is available first-come, first-served along the North side of Sloat Blvd between 19th Ave and 22nd Ave. ADA Parking is limited.";
+  }
+
+  if (/\b(senior seating|senior section|seniors)\b/i.test(message)) {
+    return "The Senior Seating Section is first-come, first-served inside the Concert Meadow for seniors 65+. It has bench seating, capacity is limited, and guests and one companion are invited to sit in this section.";
+  }
+
+  if (/\b(where is|located|address|location|venue)\b/i.test(message)) {
+    return "Stern Grove Festival takes place at Sigmund Stern Grove, located at the corner of 19th Avenue and Sloat Boulevard in San Francisco, CA 94132.";
+  }
+
+  if (/\b(where.*park|parking|public parking lot|street parking)\b/i.test(message)) {
+    return "There is no public parking lot. Street parking is extremely limited. If parking in neighborhoods near the Grove, please respect neighbors and do not block driveways. The Festival recommends taking public transportation, rideshare, or biking.";
+  }
+
+  if (/\b(shuttle|use the shuttle)\b/i.test(message)) {
+    return "Shuttle service is available for seniors and guests requiring ADA accommodations, plus one companion. Pickup locations are 19th Ave & Sloat Blvd, Vale Ave & Crestlake Dr, and 20th Ave & Wawona St. All inbound and outbound shuttles use the Vale Avenue Entrance. Shuttle hours are 11:00 AM to 5:30 PM.";
+  }
+
+  if (/\b(volunteer|volunteering)\b/i.test(message)) {
+    return "Volunteers can sign up at sterngrove.org/volunteer. All volunteer roles are for people 18 and older. Volunteer benefits may include two General Admission tickets to a future show, community service hours, team-building opportunities, merchandise discounts, connection with fellow music lovers, and behind-the-scenes Festival experience.";
+  }
+
+  if (/\b(lost|found|left my|jacket|lost and found)\b/i.test(message)) {
+    return "Use the Ask a Staff Member button for patron support and lost-and-found questions.";
+  }
+
+  if (/\b(donate|donation|support stern grove)\b/i.test(message)) {
+    return "Stern Grove Festival is free and nonprofit. Guests can support the Festival by donating at sterngrove.org/donate.";
   }
 
   const lineupMatch = LINEUP.find((show) => show.aliases.some((alias) => normalized.includes(alias)));
