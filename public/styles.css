@@ -200,6 +200,51 @@ h1 {
   font-weight: 700;
 }
 
+.sgf-chat__qa {
+  border-top: 1px solid var(--sgf-line);
+  padding: 12px 14px;
+  background: #fbf8f0;
+}
+
+.sgf-chat__qa[hidden] {
+  display: none;
+}
+
+.sgf-chat__qa-title {
+  margin: 0 0 8px;
+  color: var(--sgf-green);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.sgf-chat__qa-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.sgf-chat__qa-button {
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid var(--sgf-line);
+  border-radius: 8px;
+  background: white;
+  color: var(--sgf-ink);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.sgf-chat__qa-status {
+  display: block;
+  min-height: 17px;
+  margin-top: 6px;
+  color: var(--sgf-green);
+  font-size: 12px;
+}
+
 .sgf-chat__form {
   display: flex;
   gap: 8px;

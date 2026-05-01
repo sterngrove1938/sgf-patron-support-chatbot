@@ -2,11 +2,17 @@
   const script = document.currentScript;
   const apiBaseUrl = script?.dataset.apiBaseUrl || "";
   const formUrl = "https://forms.gle/aYFRTZbEzBzu76k19";
+  const feedbackSheetUrl = "https://docs.google.com/spreadsheets/d/1nXBEDjKjoBWJU-f6tl0HZK8oLBpBScLy1M9lgc-ogJc/edit";
+  const qaMode = new URLSearchParams(window.location.search).has("qa");
 
   const state = {
     open: false,
-    history: []
+    history: [],
+    lastExchange: null
   };
+
+  let qaStatus;
+  let qaStatusTimer;
 
   function createElement(tag, className, text) {
     const element = document.createElement(tag);
@@ -49,6 +55,63 @@
     window.open(formUrl, "_blank", "noopener,noreferrer");
   }
 
+  function setQaStatus(text) {
+    if (!qaStatus) return;
+    qaStatus.textContent = text;
+    clearTimeout(qaStatusTimer);
+    if (text) {
+      qaStatusTimer = setTimeout(() => {
+        qaStatus.textContent = "";
+      }, 2200);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const textarea = createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.body.append(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  }
+
+  async function copyText(text) {
+    if (!text) {
+      setQaStatus("Ask a question first");
+      return;
+    }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        fallbackCopy(text);
+      }
+      setQaStatus("Copied");
+    } catch {
+      fallbackCopy(text);
+      setQaStatus("Copied");
+    }
+  }
+
+  function formatLastExchange() {
+    if (!state.lastExchange) return "";
+    return [
+      `Question: ${state.lastExchange.question}`,
+      "",
+      `Answer: ${state.lastExchange.answer}`
+    ].join("\n");
+  }
+
+  function formatTranscript() {
+    return state.history
+      .map((item) => `${item.role === "user" ? "Patron" : "Chatbot"}: ${item.content}`)
+      .join("\n\n");
+  }
+
   async function sendMessage(text) {
     const message = text.trim();
     if (!message) return;
@@ -71,10 +134,14 @@
 
       const data = await response.json();
       removeTypingIndicator(typing);
-      addMessage("bot", data.reply || "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.");
+      const reply = data.reply || "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.";
+      addMessage("bot", reply);
+      state.lastExchange = { question: message, answer: reply };
     } catch {
       removeTypingIndicator(typing);
-      addMessage("bot", "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.");
+      const reply = "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.";
+      addMessage("bot", reply);
+      state.lastExchange = { question: message, answer: reply };
     } finally {
       send.disabled = false;
       input.disabled = false;
@@ -101,6 +168,20 @@
   staff.type = "button";
   actions.append(staff);
 
+  const qaTools = createElement("div", "sgf-chat__qa");
+  qaTools.hidden = !qaMode;
+  const qaTitle = createElement("p", "sgf-chat__qa-title", "Staff QA");
+  const qaButtons = createElement("div", "sgf-chat__qa-buttons");
+  const copyLast = createElement("button", "sgf-chat__qa-button", "Copy last Q&A");
+  const copyTranscript = createElement("button", "sgf-chat__qa-button", "Copy transcript");
+  const openFeedback = createElement("button", "sgf-chat__qa-button", "Open feedback sheet");
+  qaStatus = createElement("span", "sgf-chat__qa-status");
+  copyLast.type = "button";
+  copyTranscript.type = "button";
+  openFeedback.type = "button";
+  qaButtons.append(copyLast, copyTranscript, openFeedback);
+  qaTools.append(qaTitle, qaButtons, qaStatus);
+
   const form = createElement("form", "sgf-chat__form");
   const input = createElement("input", "sgf-chat__input");
   input.type = "text";
@@ -113,7 +194,7 @@
   const launcher = createElement("button", "sgf-chat__launcher", "Festival Help");
   launcher.type = "button";
 
-  panel.append(header, messages, actions, form);
+  panel.append(header, messages, actions, qaTools, form);
   root.append(panel, launcher);
   document.body.append(root);
 
@@ -122,6 +203,11 @@
   launcher.addEventListener("click", () => setOpen(true));
   close.addEventListener("click", () => setOpen(false));
   staff.addEventListener("click", askStaff);
+  copyLast.addEventListener("click", () => copyText(formatLastExchange()));
+  copyTranscript.addEventListener("click", () => copyText(formatTranscript()));
+  openFeedback.addEventListener("click", () => {
+    window.open(feedbackSheetUrl, "_blank", "noopener,noreferrer");
+  });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     sendMessage(input.value);
