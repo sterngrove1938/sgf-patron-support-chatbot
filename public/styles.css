@@ -137,6 +137,49 @@ h1 {
   color: white;
 }
 
+.sgf-chat__typing {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  min-width: 52px;
+}
+
+.sgf-chat__typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(44, 31, 21, 0.54);
+  animation: sgf-chat-typing 1s ease-in-out infinite;
+}
+
+.sgf-chat__typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.sgf-chat__typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes sgf-chat-typing {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sgf-chat__typing span {
+    animation: none;
+  }
+}
+
 .sgf-chat__actions {
   display: grid;
   gap: 8px;

@@ -22,6 +22,22 @@
     state.history.push({ role: role === "user" ? "user" : "assistant", content: text });
   }
 
+  function showTypingIndicator() {
+    const typing = createElement("div", "sgf-chat__message sgf-chat__message--bot sgf-chat__typing");
+    typing.setAttribute("role", "status");
+    typing.setAttribute("aria-label", "Stern Grove Support is typing");
+    typing.innerHTML = "<span></span><span></span><span></span>";
+    messages.append(typing);
+    messages.scrollTop = messages.scrollHeight;
+    return typing;
+  }
+
+  function removeTypingIndicator(typing) {
+    if (typing?.parentNode) {
+      typing.remove();
+    }
+  }
+
   function setOpen(open) {
     state.open = open;
     root.classList.toggle("sgf-chat--open", open);
@@ -40,6 +56,8 @@
     addMessage("user", message);
     input.value = "";
     send.disabled = true;
+    input.disabled = true;
+    const typing = showTypingIndicator();
 
     try {
       const response = await fetch(`${apiBaseUrl}/api/chat`, {
@@ -52,11 +70,14 @@
       });
 
       const data = await response.json();
+      removeTypingIndicator(typing);
       addMessage("bot", data.reply || "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.");
     } catch {
+      removeTypingIndicator(typing);
       addMessage("bot", "I do not have confirmed information on that from Stern Grove's approved materials. Please use the Ask a Staff Member button to contact the Stern Grove team through the Patron Experience Form.");
     } finally {
       send.disabled = false;
+      input.disabled = false;
       input.focus();
     }
   }
