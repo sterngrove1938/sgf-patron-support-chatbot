@@ -222,14 +222,14 @@
   send.type = "submit";
   form.append(input, send);
 
-  const launcher = createElement("button", "sgf-chat__launcher", "Festival Help");
+  const launcher = createElement("button", "sgf-chat__launcher", "Festival Support");
   launcher.type = "button";
 
   panel.append(header, messages, actions, qaTools, form);
   root.append(panel, launcher);
   document.body.append(root);
 
-  addMessage("bot", "Hi! I can help with common questions about the Festival. What can I help you with?");
+  addMessage("bot", "Hello! I'm an assistant trained to help with common questions about Stern Grove Festival. How can I help you?");
 
   launcher.addEventListener("click", () => setOpen(true));
   close.addEventListener("click", () => setOpen(false));
