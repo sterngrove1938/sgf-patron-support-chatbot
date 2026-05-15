@@ -18,6 +18,16 @@ const HIGH_RISK_PATTERNS = [
 
 const SEATING_AREAS_URL = "https://www.sterngrove.org/seating-areas";
 
+const ALLOWED_CORS_ORIGINS = [
+  "https://www.sterngrove.org",
+  "https://sterngrove.org",
+  "https://sgf-patron-support-chatbot.vercel.app",
+  "http://127.0.0.1:8787",
+  "http://127.0.0.1:8788",
+  "http://localhost:8787",
+  "http://localhost:8788"
+];
+
 const LINEUP = [
   {
     artist: "Peter Cat Recording Co.",
@@ -109,12 +119,47 @@ const LINEUP = [
   }
 ];
 
-function jsonResponse(status, payload) {
+function getCorsOrigin(request) {
+  const origin = request?.headers?.get?.("origin");
+  if (!origin) return "*";
+
+  if (ALLOWED_CORS_ORIGINS.includes(origin)) {
+    return origin;
+  }
+
+  if (/^https:\/\/([a-z0-9-]+\.)*sterngrove\.org$/i.test(origin)) {
+    return origin;
+  }
+
+  if (/^https:\/\/[a-z0-9-]+\.squarespace\.com$/i.test(origin)) {
+    return origin;
+  }
+
+  return "";
+}
+
+function corsHeaders(request) {
+  const origin = getCorsOrigin(request);
+  const headers = {
+    "access-control-allow-methods": "POST, OPTIONS",
+    "access-control-allow-headers": "content-type",
+    "vary": "Origin"
+  };
+
+  if (origin) {
+    headers["access-control-allow-origin"] = origin;
+  }
+
+  return headers;
+}
+
+function jsonResponse(status, payload, request) {
   return new Response(JSON.stringify(payload), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store"
+      "cache-control": "no-store",
+      ...corsHeaders(request)
     }
   });
 }
@@ -643,22 +688,29 @@ function isNodeResponse(response) {
 }
 
 async function handleWebRequest(request) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request)
+    });
+  }
+
   if (request.method !== "POST") {
-    return jsonResponse(405, { error: "Use POST." });
+    return jsonResponse(405, { error: "Use POST." }, request);
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return jsonResponse(400, { error: "Invalid JSON." });
+    return jsonResponse(400, { error: "Invalid JSON." }, request);
   }
 
   const message = String(body.message || "").trim();
   const history = Array.isArray(body.history) ? body.history : [];
 
   if (!message) {
-    return jsonResponse(400, { error: "Message is required." });
+    return jsonResponse(400, { error: "Message is required." }, request);
   }
 
   if (/^(yes|yep|yeah|yes thanks|thank you|thanks|that helps|all set|that's all|thats all)$/i.test(message)) {
@@ -666,7 +718,7 @@ async function handleWebRequest(request) {
       reply: "Glad I could help.",
       escalate: false,
       reason: "conversation_closed"
-    });
+    }, request);
   }
 
   if (/^(thanks|thank you).*(all set|that's all|thats all|done)$/i.test(message)) {
@@ -674,7 +726,7 @@ async function handleWebRequest(request) {
       reply: "Glad I could help.",
       escalate: false,
       reason: "conversation_closed"
-    });
+    }, request);
   }
 
   if (/^(no|nope|not really|that did not help|that doesn't help)$/i.test(message)) {
@@ -682,7 +734,7 @@ async function handleWebRequest(request) {
       reply: ESCALATION_COPY.didNotHelp,
       escalate: true,
       reason: "answer_not_helpful"
-    });
+    }, request);
   }
 
   const directAnswer = answerFromSourcePack(message, []);
@@ -691,7 +743,7 @@ async function handleWebRequest(request) {
       reply: directAnswer,
       escalate: false,
       mode: "source_pack"
-    });
+    }, request);
   }
 
   if (shouldEscalateLocally(message)) {
@@ -699,7 +751,7 @@ async function handleWebRequest(request) {
       reply: ESCALATION_COPY.cannotAnswer,
       escalate: true,
       reason: "high_risk_or_personal"
-    });
+    }, request);
   }
 
   try {
@@ -708,14 +760,14 @@ async function handleWebRequest(request) {
       reply: result.reply,
       escalate: false,
       mode: result.mode
-    });
+    }, request);
   } catch (error) {
     console.error(error);
     return jsonResponse(500, {
       reply: ESCALATION_COPY.cannotAnswer,
       escalate: true,
       reason: "server_error"
-    });
+    }, request);
   }
 }
 
