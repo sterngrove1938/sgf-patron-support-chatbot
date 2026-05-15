@@ -774,16 +774,28 @@ async function handleWebRequest(request) {
 async function handleNodeRequest(request, response) {
   const webRequest = {
     method: request.method,
+    headers: {
+      get(name) {
+        return request.headers?.[name.toLowerCase()] || request.headers?.[name] || "";
+      }
+    },
     async json() {
       return request.body || {};
     }
   };
 
   const webResponse = await handleWebRequest(webRequest);
-  const payload = await webResponse.json();
+  const payloadText = await webResponse.text();
 
-  response
-    .status(webResponse.status)
-    .setHeader("cache-control", "no-store")
-    .json(payload);
+  response.status(webResponse.status);
+  webResponse.headers.forEach((value, key) => {
+    response.setHeader(key, value);
+  });
+
+  if (!payloadText) {
+    response.end();
+    return;
+  }
+
+  response.json(JSON.parse(payloadText));
 }
