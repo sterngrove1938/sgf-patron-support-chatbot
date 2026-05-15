@@ -482,7 +482,7 @@ Document owner: Human Resources / Festival Leadership
 
 ## Overview
 
-Stern Grove Festival asks everyone to treat one another with kindness and respect. Harassment is not tolerated.
+Stern Grove Festival asks everyone to treat one another with kindness and respect. Harassment, abusive language, and slurs are not tolerated.
 
 Everyone is welcome at Stern Grove Festival with a valid ticket and respectful behavior.
 
@@ -509,6 +509,7 @@ The following behavior has no place at Stern Grove Festival:
 - Threats
 - Disruptions
 - Offensive comments
+- Abusive language or slurs
 - Unwelcome touching
 - Harassment
 - Sexual activity or explicit filming at the Festival

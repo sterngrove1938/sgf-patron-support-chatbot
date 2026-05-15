@@ -304,13 +304,21 @@ function isReservedTablePricingQuestion(message) {
     /\b(table|tables|reserved seat|reserved seats|community table|standard table|premium table)\b.*\b(how much|cost|costs|price|prices|pricing)\b/i.test(message);
 }
 
+function containsAbusiveSlur(message) {
+  return /\b(fags?|faggots?|dykes?|homos?|niggers?|niggas?|kikes?|spics?|chinks?|gooks?|wetbacks?|trann(?:y|ies)|retards?)\b/i.test(message);
+}
+
 function isIdentityWelcomeQuestion(message) {
   return /\b(are|is|can|may|could)\b.+\b(allowed|welcome|come|attend|go)\b/i.test(message) &&
-    /\b(muslim|muslims|jewish|jews|christian|christians|hindu|hindus|buddhist|buddhists|gay|lesbian|queer|trans|transgender|lgbtq|disabled|black|asian|latino|latina|immigrant|immigrants|faggots?)\b/i.test(message);
+    /\b(muslim|muslims|jewish|jews|christian|christians|hindu|hindus|buddhist|buddhists|gay|lesbian|queer|trans|transgender|lgbtq|disabled|black|asian|latino|latina|immigrant|immigrants)\b/i.test(message);
 }
 
 function answerFromSourcePack(message, sourceResults) {
   const normalized = message.toLowerCase();
+
+  if (containsAbusiveSlur(message)) {
+    return "Stern Grove Festival does not tolerate abusive language or behavior. Please keep conversations respectful.";
+  }
 
   if (isIdentityWelcomeQuestion(message)) {
     return "Yes. Everyone is welcome at Stern Grove Festival with a valid ticket and respectful behavior. Harassment, offensive comments, threats, intimidation, and disruptions are not allowed.";
