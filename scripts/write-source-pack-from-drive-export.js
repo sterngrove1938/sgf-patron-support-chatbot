@@ -61,11 +61,11 @@ Stern Grove requires tickets for entry because:
 
 Individual reserved seats and full picnic tables for 10 guests are available. Visit each show page on the lineup to choose your table type.
 
-Pricing:
+Table seat costs:
 
-- $200 - Community Table Seat, seats 1: Reserved seat at a shared table with expedited check-in.
-- $2,000 - Standard Table, seats 10: Reserved table, expedited check-in, and 3 parking passes for the Upper Lot.
-- $4,000 - Premium Table, seats 10: Best views of the stage, customizable picnic lunch boxes, beer, wine, non-alcoholic beverages, welcome drinks in the historic Trocadero Clubhouse, expedited check-in, and 3 parking passes for the Backstage Lot.
+- Community Table Seat (1) - $200: Reserved seat at a shared table with expedited check-in.
+- Standard Table (10) - $2,000: Reserved table, expedited check-in, and 3 parking passes for the Upper Lot.
+- Premium Table (10) - $4,000: Best views of the stage, customizable picnic lunch boxes, beer, wine, non-alcoholic beverages, welcome drinks in the historic Trocadero Clubhouse, expedited check-in, and 3 parking passes for the Backstage Lot.
 
 Prices increase during Big Picnic Weekend due to elevated production and hospitality offerings.
 

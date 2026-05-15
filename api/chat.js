@@ -254,6 +254,11 @@ function isSpecificBringQuestion(message) {
     /\b(is|are)\s+.+\s+(allowed|permitted)\b/i.test(message);
 }
 
+function isReservedTablePricingQuestion(message) {
+  return /\b(how much|cost|costs|price|prices|pricing)\b.*\b(table|tables|reserved seat|reserved seats|community table|standard table|premium table)\b/i.test(message) ||
+    /\b(table|tables|reserved seat|reserved seats|community table|standard table|premium table)\b.*\b(how much|cost|costs|price|prices|pricing)\b/i.test(message);
+}
+
 function isIdentityWelcomeQuestion(message) {
   return /\b(are|is|can|may|could)\b.+\b(allowed|welcome|come|attend|go)\b/i.test(message) &&
     /\b(muslim|muslims|jewish|jews|christian|christians|hindu|hindus|buddhist|buddhists|gay|lesbian|queer|trans|transgender|lgbtq|disabled|black|asian|latino|latina|immigrant|immigrants|faggots?)\b/i.test(message);
@@ -344,13 +349,13 @@ function answerFromSourcePack(message, sourceResults) {
     return "Yes. You may forward your ticket to a friend by sending them the PDF ticket with the unique QR code. As long as they have that QR code, they can get in.";
   }
 
-  if (/\b(how much|cost|price|pricing).*\b(reserved picnic tables?|reserved tables?|picnic tables?|community table|standard table|premium table)\b/i.test(message) || /\b(reserved picnic tables?|reserved tables?|picnic tables?|community table|standard table|premium table).*\b(cost|price|how much|pricing)\b/i.test(message)) {
+  if (isReservedTablePricingQuestion(message)) {
     return [
-      "Reserved table pricing is:",
+      "Table seat costs:",
       "",
-      "Community Table Seat: $200",
-      "Standard Table, seats 10: $2,000",
-      "Premium Table, seats 10: $4,000",
+      "Community Table Seat (1) - $200",
+      "Standard Table (10) - $2,000",
+      "Premium Table (10) - $4,000",
       "",
       "Prices increase during Big Picnic Weekend due to elevated production and hospitality offerings."
     ].join("\n");
