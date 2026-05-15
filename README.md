@@ -45,6 +45,20 @@ http://localhost:8787
 - `docs/behavior-spec.md` defines response, escalation, and handoff behavior.
 - `docs/source-pack-sync.md` defines the planned Google Drive to OpenAI vector store sync.
 
+## Website Embed
+
+Add this sitewide before the closing `</body>` tag:
+
+```html
+<script
+  src="https://sgf-patron-support-chatbot.vercel.app/widget.js"
+  data-api-base-url="https://sgf-patron-support-chatbot.vercel.app"
+  defer
+></script>
+```
+
+The widget loads its own stylesheet from the same Vercel deployment.
+
 ## Source Pack Boundary
 
 Only these documents should be uploaded to the OpenAI vector store:
@@ -61,3 +75,13 @@ Only these documents should be uploaded to the OpenAI vector store:
 10. `10-2026-season-lineup`
 
 Internal documents can guide instructions and routing, but must not be uploaded as retrieval sources.
+
+## Rebuild Vector Store
+
+After updating the Source Pack, run:
+
+```bash
+npm run create-vector-store
+```
+
+Copy the new `OPENAI_VECTOR_STORE_ID` from the command output into the Vercel project environment variables for Production and Preview, then redeploy.

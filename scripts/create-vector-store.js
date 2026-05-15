@@ -1,10 +1,6 @@
 import { openAsBlob } from "node:fs";
-import { readdir, stat } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
-
-const apiKey = process.env.OPENAI_API_KEY;
-const sourceDir = process.env.SOURCE_PACK_DIR || "source-pack";
-const storeName = process.env.VECTOR_STORE_NAME || "sgf-source-pack-staging";
 
 const expectedFiles = [
   "01-ticketing-and-lottery",
@@ -22,6 +18,39 @@ const expectedFiles = [
 function fail(message) {
   console.error(message);
   process.exit(1);
+}
+
+function parseEnvValue(value) {
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+
+  return trimmed;
+}
+
+async function loadLocalEnv(path = ".env") {
+  try {
+    const text = await readFile(path, "utf8");
+    for (const line of text.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+
+      const separator = trimmed.indexOf("=");
+      if (separator === -1) continue;
+
+      const key = trimmed.slice(0, separator).trim();
+      const value = parseEnvValue(trimmed.slice(separator + 1));
+      if (key && process.env[key] === undefined) {
+        process.env[key] = value;
+      }
+    }
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
 }
 
 async function openAI(path, options = {}) {
@@ -86,6 +115,12 @@ async function createVectorStore(fileIds) {
     })
   });
 }
+
+await loadLocalEnv();
+
+const apiKey = process.env.OPENAI_API_KEY;
+const sourceDir = process.env.SOURCE_PACK_DIR || "source-pack";
+const storeName = process.env.VECTOR_STORE_NAME || "sgf-source-pack-staging";
 
 if (!apiKey) {
   fail("Set OPENAI_API_KEY before running this script.");

@@ -351,7 +351,7 @@ function answerFromSourcePack(message, sourceResults) {
 
   if (isReservedTablePricingQuestion(message)) {
     return [
-      "Table seat costs:",
+      "Reserved table pricing is:",
       "",
       "Community Table Seat (1) - $200",
       "Standard Table (10) - $2,000",

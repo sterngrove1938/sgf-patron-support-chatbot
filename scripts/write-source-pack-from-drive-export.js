@@ -61,7 +61,7 @@ Stern Grove requires tickets for entry because:
 
 Individual reserved seats and full picnic tables for 10 guests are available. Visit each show page on the lineup to choose your table type.
 
-Table seat costs:
+Reserved table pricing:
 
 - Community Table Seat (1) - $200: Reserved seat at a shared table with expedited check-in.
 - Standard Table (10) - $2,000: Reserved table, expedited check-in, and 3 parking passes for the Upper Lot.

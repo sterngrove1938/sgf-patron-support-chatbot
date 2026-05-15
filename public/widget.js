@@ -1,6 +1,8 @@
 (function () {
   const script = document.currentScript;
-  const apiBaseUrl = script?.dataset.apiBaseUrl || "";
+  const scriptUrl = script?.src ? new URL(script.src, window.location.href) : null;
+  const assetBaseUrl = scriptUrl ? scriptUrl.origin : "";
+  const apiBaseUrl = script?.dataset.apiBaseUrl || assetBaseUrl;
   const formUrl = "https://forms.gle/aYFRTZbEzBzu76k19";
   const feedbackFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSf89aX-QlpIDts-sMoTdQNjDwQw-AzKbiQL-WOF34aQOkRBnw/viewform?usp=header";
   const qaMode = new URLSearchParams(window.location.search).has("qa");
@@ -19,6 +21,19 @@
     if (className) element.className = className;
     if (text) element.textContent = text;
     return element;
+  }
+
+  function ensureStylesheet() {
+    if (!assetBaseUrl) return;
+    const href = `${assetBaseUrl}/styles.css`;
+    const alreadyLoaded = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+      .some((link) => link.href === href);
+    if (alreadyLoaded) return;
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.append(link);
   }
 
   function cleanDisplayText(text) {
@@ -164,11 +179,17 @@
   panel.setAttribute("aria-label", "Stern Grove Festival patron support chat");
 
   const header = createElement("div", "sgf-chat__header");
+  ensureStylesheet();
+
+  const titleWrap = createElement("div", "sgf-chat__title-wrap");
   const title = createElement("p", "sgf-chat__title", "Stern Grove Support");
+  const beta = createElement("span", "sgf-chat__beta", "Beta");
+  beta.setAttribute("aria-label", "Beta: this chatbot is new and still being improved");
+  titleWrap.append(title, beta);
   const close = createElement("button", "sgf-chat__close", "x");
   close.type = "button";
   close.setAttribute("aria-label", "Close chat");
-  header.append(title, close);
+  header.append(titleWrap, close);
 
   const messages = createElement("div", "sgf-chat__messages");
   messages.setAttribute("aria-live", "polite");

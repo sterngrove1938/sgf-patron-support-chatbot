@@ -90,10 +90,32 @@ h1 {
   color: white;
 }
 
+.sgf-chat__title-wrap {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
 .sgf-chat__title {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
+}
+
+.sgf-chat__beta {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .sgf-chat__close,
