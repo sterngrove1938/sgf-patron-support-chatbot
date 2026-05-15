@@ -125,6 +125,8 @@ h1 {
   border-radius: 8px;
   line-height: 1.4;
   font-size: 14px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .sgf-chat__message--bot {

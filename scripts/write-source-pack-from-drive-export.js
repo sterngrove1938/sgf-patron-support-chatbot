@@ -174,6 +174,7 @@ Biking is encouraged. There is a free Bike Valet located at 21st and Wawona.
 
 - Bike valet is open from 11:00 AM to 1 hour after the show.
 - Bicycles are not allowed in the Concert Meadow. Please store bicycles at the bike valet.
+- If a patron forgets to pick up a bicycle after the show, use the Ask a Staff Member button for lost-and-found support.
 
 ## In-Venue Shuttle Service
 
@@ -322,10 +323,11 @@ Document owner: Operations Team
 - Skateboards, scooters, hoverboards, or any personal motorized vehicles in the Esplanade or Concert Meadow
 - Firearms or weapons of any kind
 - Drones
+- Laser pointers
 - Fireworks and explosives, or any item with open flame
 - Illegal substances, including narcotics, or drug paraphernalia
 - Amplified sound, bullhorns, or speakers
-- Smoking is prohibited at the Grove
+- Smoking and vaping are prohibited at the Grove
 - Any items that can be used to disturb the peace, endanger other patrons, or cause damage to people or property
 `
   },
@@ -355,6 +357,10 @@ Most seating at Stern Grove Festival is General Admission and first-come, first-
 - Wheelchair Seating
 
 ADA and Senior Seating are limited-capacity areas. Guests needing help locating these areas should speak with a staff member on-site.
+
+## Shade
+
+Shade is not guaranteed. Tents, umbrellas, and shade structures are not allowed.
 
 ## Reserved and Donation-Based Seating
 
@@ -408,10 +414,10 @@ Every purchase at on-site food and beverage locations supports Stern Grove Festi
   },
   {
     filename: "07-volunteering.md",
-    title: "Stern Grove Festival - Volunteering",
-    content: `# Stern Grove Festival - Volunteering
+    title: "Stern Grove Festival - Volunteering and Jobs",
+    content: `# Stern Grove Festival - Volunteering and Jobs
 
-Source: sterngrove.org/volunteer
+Source: sterngrove.org/volunteer, sterngrove.org/jobs
 Last updated: April 30, 2026
 Document owner: Volunteer Team
 
@@ -443,6 +449,10 @@ Volunteer benefits may include:
 - Merchandise discounts
 - Connection with fellow music lovers
 - Behind-the-scenes Festival experience
+
+## Jobs and Employment
+
+For jobs and employment opportunities with Stern Grove Festival, visit sterngrove.org/jobs.
 `
   },
   {
@@ -540,9 +550,9 @@ San Francisco, CA 94123-1284
 - Leashed pets are allowed in the West Meadow only.
 - Pets are not allowed in the Concert Meadow.
 
-## Smoking
+## Smoking and Vaping
 
-Smoking is prohibited at the Grove.
+Smoking and vaping are prohibited at the Grove.
 
 ## Donations
 

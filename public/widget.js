@@ -21,11 +21,21 @@
     return element;
   }
 
+  function cleanDisplayText(text) {
+    return String(text || "")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/__([^_]+)__/g, "$1")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/\*{2,}/g, "")
+      .trim();
+  }
+
   function addMessage(role, text) {
-    const message = createElement("div", `sgf-chat__message sgf-chat__message--${role}`, text);
+    const content = role === "bot" ? cleanDisplayText(text) : String(text || "");
+    const message = createElement("div", `sgf-chat__message sgf-chat__message--${role}`, content);
     messages.append(message);
     messages.scrollTop = messages.scrollHeight;
-    state.history.push({ role: role === "user" ? "user" : "assistant", content: text });
+    state.history.push({ role: role === "user" ? "user" : "assistant", content });
   }
 
   function showTypingIndicator() {
