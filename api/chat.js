@@ -13,9 +13,10 @@ const HIGH_RISK_PATTERNS = [
   /\b(refund|tax receipt|receipt|payment|charge|change my date|donation back|donated last year)\b/i,
   /\b(exception|override|guarantee|guaranteed entry)\b/i,
   /\b(harass|harassed|harassment|misconduct|unsafe|safety report)\b/i,
-  /\b(chronic condition|medical|emergency|911|urgent help)\b/i,
   /\b(rain.*cancel|weather.*cancel|cancelled|canceled)\b/i
 ];
+
+const SEATING_AREAS_URL = "https://www.sterngrove.org/seating-areas";
 
 const LINEUP = [
   {
@@ -253,8 +254,57 @@ function isSpecificBringQuestion(message) {
     /\b(is|are)\s+.+\s+(allowed|permitted)\b/i.test(message);
 }
 
+function isIdentityWelcomeQuestion(message) {
+  return /\b(are|is|can|may|could)\b.+\b(allowed|welcome|come|attend|go)\b/i.test(message) &&
+    /\b(muslim|muslims|jewish|jews|christian|christians|hindu|hindus|buddhist|buddhists|gay|lesbian|queer|trans|transgender|lgbtq|disabled|black|asian|latino|latina|immigrant|immigrants|faggots?)\b/i.test(message);
+}
+
 function answerFromSourcePack(message, sourceResults) {
   const normalized = message.toLowerCase();
+
+  if (isIdentityWelcomeQuestion(message)) {
+    return "Yes. Everyone is welcome at Stern Grove Festival with a valid ticket and respectful behavior. Harassment, offensive comments, threats, intimidation, and disruptions are not allowed.";
+  }
+
+  if (/\b(who can'?t come|who cannot come|who is not allowed|who isn't allowed)\b/i.test(message)) {
+    return "Stern Grove Festival is open to ticketed attendees who follow the Code of Conduct and venue rules. Every attendee needs a valid ticket to enter.";
+  }
+
+  if (/\b(pissed|angry|mad|upset|unhappy|not happy|bad experience|didn'?t let me in|wouldn'?t let me in|complain|complaint)\b/i.test(message) && !/\b(harass|harassed|harassment|misconduct|threat|unsafe|security)\b/i.test(message)) {
+    return "I am sorry you had a frustrating experience. If you are on site during a show day, please visit the Info Booth in the Esplanade. You can also use the Ask a Staff Member button to contact the Stern Grove team.";
+  }
+
+  if (/\b(employee|staff|security).*\b(harass|harassed|harrased|harassment|misconduct|unsafe)\b/i.test(message) || /\b(harass|harassed|harrased|harassment|misconduct|unsafe).*\b(employee|staff|security)\b/i.test(message)) {
+    return "I am sorry that happened. Please report the concern to Staff, Security, or hr@sterngrove.org. If you are on site and need immediate help, notify the nearest staff member or security guard.";
+  }
+
+  if (/\b(harass|harassed|harrased|harassment|misconduct|unsafe|safety report|threat|threatened)\b/i.test(message)) {
+    return "Please report the concern to Staff, Security, or hr@sterngrove.org. If you are on site and need immediate help, notify the nearest staff member or security guard.";
+  }
+
+  if (/\b(employee|staff|security).*\b(name|names|who works|identify|identity|company)\b/i.test(message) || /\b(security company)\b/i.test(message)) {
+    return "I cannot help identify individual employees or security providers. For patron support, use the Ask a Staff Member button.";
+  }
+
+  if (/\b(lost|lose|missing|can'?t find|cannot find).*\b(child|kid|son|daughter|minor)\b/i.test(message) || /\b(child|kid|son|daughter|minor).*\b(lost|lose|missing|can'?t find|cannot find)\b/i.test(message)) {
+    return "If a child is lost or missing, notify the nearest staff member, security guard, paramedic, police officer, or park ranger immediately.";
+  }
+
+  if (/\b(emergency|urgent help|911|medical help|medical emergency|medical condition|chronic condition|medic|medics|paramedic|paramedics|first aid|overdose)\b/i.test(message)) {
+    return "In an emergency, notify the nearest staff member, security guard, paramedic, police officer, or park ranger. The paramedic tent is located in the Esplanade.";
+  }
+
+  if (/\b(narcan|naloxone)\b/i.test(message)) {
+    if (/\b(can|may|could|should).*\b(bring|take|carry)\b/i.test(message) || /\b(bring|take|carry)\b/i.test(message)) {
+      return "Yes. Patrons may bring Narcan. Narcan is also available at the paramedic tent in the Esplanade.";
+    }
+
+    return "Narcan is available at the paramedic tent in the Esplanade.";
+  }
+
+  if (/\b(sex|sexual activity|porn|explicit|suck a dick|sucking dick).*\b(show|festival|concert|grove|venue)\b/i.test(message) || /\b(show|festival|concert|grove|venue).*\b(sex|sexual activity|porn|explicit|suck a dick|sucking dick)\b/i.test(message)) {
+    return "No. Sexual activity or explicit filming is not permitted at the Festival. Behavior that disturbs the peace, endangers patrons, or disrupts the event is prohibited.";
+  }
 
   if (/\b(which|what).*\blottery.*\b(open|available|right now|currently)\b/i.test(message)) {
     const openLotteries = getCurrentLotteryShows();
@@ -310,8 +360,16 @@ function answerFromSourcePack(message, sourceResults) {
     return "No. Tables are assigned by the team based on availability, table level, date of reservation, and accessibility needs. Map-based selection is not available.";
   }
 
+  if (/\b(map|festival map|venue map|seating map|see a map|find a map)\b/i.test(message)) {
+    return `You can find seating and venue-area information at ${SEATING_AREAS_URL}.`;
+  }
+
   if (/\b(book|reserve|purchase|get).*\b(reserved tables?|picnic tables?|table)\b/i.test(message)) {
     return "Reserved tables can be reserved by making a donation through each show's page. For reserved table questions, contact development@sterngrove.org or call 415-625-6006.";
+  }
+
+  if (/\b(vip|donor|reserved table|reserved tables|table holder|table guest|donated).*\b(check in|check-in|entrance|enter|entry|where do i go|where to go|go)\b/i.test(message) || /\b(check in|check-in|entrance|enter|entry|where do i go|where to go|where is|go).*\b(vip|donor|reserved table|reserved tables|table holder|table guest|donated)\b/i.test(message)) {
+    return "VIP, donor, and reserved-table guests can check in at any of the three entrances. The Vale Ave entrance is for VIP, donor, and reserved-table guests only.";
   }
 
   if (/\b(gates open|gate open|queue|dj|show time|what time.*show|schedule)\b/i.test(message)) {
@@ -338,8 +396,12 @@ function answerFromSourcePack(message, sourceResults) {
     return "The Senior Seating Section is first-come, first-served inside the Concert Meadow for seniors 65+. It has bench seating, capacity is limited, and guests and one companion are invited to sit in this section.";
   }
 
+  if (/\b(prove|proof|documentation|documented|qualify|qualification).*\b(ada|accessible|accessibility|disability|disabled)\b/i.test(message) || /\b(ada|accessible|accessibility|disability|disabled).*\b(prove|proof|documentation|documented|qualify|qualification)\b/i.test(message)) {
+    return "ADA Seating is for guests requiring ADA accommodations but not using a wheelchair. It is first-come, first-served with limited capacity. Please see a staff member on-site for help locating the area or for questions about accommodations.";
+  }
+
   if (/\b(entrance|entrances|enter|entry gate|ga entrance|gate)\b/i.test(message)) {
-    return "The two GA entrances are 19th Ave & Sloat Blvd and 23rd Ave & Wawona St. Vale Ave is closed to GA entry.";
+    return "The two GA entrances are 19th Ave & Sloat Blvd and 23rd Ave & Wawona St. VIP, donor, and reserved-table guests can also check in at the Vale Ave entrance. Vale Ave is not open for GA entry.";
   }
 
   if (/\b(where is|located|address|location|venue)\b/i.test(message)) {
@@ -379,19 +441,27 @@ function answerFromSourcePack(message, sourceResults) {
     return "Shade is not guaranteed. Tents, umbrellas, and shade structures are not allowed.";
   }
 
-  if (/\b(service dog|service animal|support animal)\b/i.test(message)) {
-    return "Yes. Service or support animals are allowed throughout the venue. Leashed pets are allowed in the West Meadow only, not the Concert Meadow.";
+  if (/\b(service dog|service animal|support animal|emotional support animal|esa)\b/i.test(message)) {
+    return "Yes. Properly documented service and support animals are allowed throughout the venue. Leashed pets are allowed in the West Meadow only, not the Concert Meadow.";
   }
 
-  if (/\b(dog|pet|pets)\b/i.test(message)) {
-    return "Leashed pets are allowed in the West Meadow only, not the Concert Meadow. Service or support animals are allowed throughout the venue.";
+  if (/\b(dog|cat|animal|pet|pets)\b/i.test(message)) {
+    return "Leashed pets are allowed in the West Meadow only, not the Concert Meadow. Properly documented service and support animals are allowed throughout the venue.";
+  }
+
+  if (/\b(free water|water fountain|water fountains|drinking water)\b/i.test(message)) {
+    return "Stern Grove Festival does not provide free water, but there are water fountains located near the Esplanade restrooms.";
+  }
+
+  if (/\b(long island|cocktail|mixed drink|liquor|hard alcohol)\b/i.test(message)) {
+    return "Bars serve beer, wine, and non-alcoholic beverages.";
   }
 
   if (/\b(food for sale|food.*on-?site|vendors?|food trucks?|bar|beer.*sale|wine.*sale|buy food|purchase food)\b/i.test(message)) {
     return "Yes. Tante's is located in the Esplanade, rotating food trucks are located in the West Meadow, and bars serve beer, wine, and non-alcoholic beverages. Every purchase supports Stern Grove Festival.";
   }
 
-  if (/\b(own food|own beer|bring.*food|bring.*beer|food and beer|alcohol)\b/i.test(message)) {
+  if (/\b(own food|own beer|own drinks?|bring.*food|bring.*beer|bring.*drinks?|bring.*beverages?|food and beer|alcohol)\b/i.test(message)) {
     return "Yes. You may bring your own food, beverages, picnics, and coolers. Alcohol is permitted for patrons of legal drinking age, 21+. Barbecues, grills, and any items with open flame are not allowed.";
   }
 
@@ -399,8 +469,24 @@ function answerFromSourcePack(message, sourceResults) {
     return "No. Tents, umbrellas, shade structures, and tarps are not allowed.";
   }
 
+  if (/\b(gun|firearm|firearms|weapon|weapons|sword|knife|knives)\b/i.test(message)) {
+    if (/\b(butter knife)\b/i.test(message)) {
+      return "Sharp knives with a blade longer than 4 inches are not allowed. If you are unsure whether a knife is permitted, use the Ask a Staff Member button.";
+    }
+
+    return "No. Firearms and weapons of any kind are not allowed at the Grove.";
+  }
+
+  if (/\b(illegal substances?|narcotics?|drug paraphernalia|drugs?|edibles?|gummies|thc|cbd)\b/i.test(message)) {
+    return "No. Illegal substances, including narcotics, and drug paraphernalia are not allowed.";
+  }
+
   if (/\b(smoking|smoke|cigarette|vape|vaping|weed|marijuana|cannabis)\b/i.test(message)) {
     return "No. Smoking and vaping are prohibited at the Grove.";
+  }
+
+  if (/\b(phone photos?|phone videos?|take (a )?(photo|picture|pic|video)|take photos?|take pictures?|record video|camera)\b/i.test(message)) {
+    return "Yes. Patrons may use phones to take photos and videos. Professional camera equipment, video or audio recording equipment, and unauthorized recording of artists and performances are not allowed.";
   }
 
   if (/\b(laser pointer|laser pointers)\b/i.test(message)) {
@@ -419,12 +505,16 @@ function answerFromSourcePack(message, sourceResults) {
     return "Blankets no larger than 5x7 feet are allowed. Tarps and blankets bigger than 5x7 feet are not allowed.";
   }
 
-  if (/\b(stroller|strollers)\b/i.test(message)) {
+  if (/\b(stroller|strollers|storller|stroler)\b/i.test(message)) {
     return "Strollers are allowed if they are folded during the performance and do not block walkways or aisles.";
   }
 
   if (/\b(cooler|coolers|picnic|picnics)\b/i.test(message)) {
     return "Yes. You may bring picnics, coolers, food, and beverages. Alcohol is permitted for patrons of legal drinking age, 21+.";
+  }
+
+  if (/\b(friends?|guests?|group)\b/i.test(message) && /\b(bring|come|attend|ticket|entry|enter)\b/i.test(message)) {
+    return "Yes. Friends can attend, but every attendee needs a valid ticket to enter.";
   }
 
   if (isSpecificBringQuestion(message)) {
@@ -587,6 +677,15 @@ async function handleWebRequest(request) {
       reply: ESCALATION_COPY.didNotHelp,
       escalate: true,
       reason: "answer_not_helpful"
+    });
+  }
+
+  const directAnswer = answerFromSourcePack(message, []);
+  if (directAnswer) {
+    return jsonResponse(200, {
+      reply: directAnswer,
+      escalate: false,
+      mode: "source_pack"
     });
   }
 

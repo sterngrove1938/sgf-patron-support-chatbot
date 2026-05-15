@@ -10,7 +10,7 @@ const docs = [
     content: `# Stern Grove Festival - Ticketing and Lottery
 
 Source: sterngrove.org/faq, sterngrove.org/galotterytickets, sterngrove.org/ticket-info
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Patron Experience / Ticketing Team
 
 ## Overview
@@ -74,6 +74,8 @@ Tables can be reserved by making a donation through each show's page. Contact de
 ### Table FAQs
 
 - Tables are assigned by the team based on availability, table level, date of reservation, and accessibility needs. Map-based selection is not available.
+- VIP, donor, and reserved-table guests can check in at any of the three entrances.
+- The Vale Ave entrance is for VIP, donor, and reserved-table guests only.
 - Table layouts may shift from concert to concert depending on artist production and audience demand.
 - An infant held in someone's arms does not count toward the seat count. Any child who needs their own seat or space does count.
 - If tables appear sold out, additional tables may be released closer to the concert date. Email development@sterngrove.org to join the waitlist.
@@ -104,7 +106,7 @@ Volunteers receive two General Admission tickets to a future show. Visit sterngr
     content: `# Stern Grove Festival - Getting Here and Transportation
 
 Source: sterngrove.org/getting-here
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Operations Team
 
 ## Venue Location
@@ -120,8 +122,14 @@ Two GA entrances:
 
 Important:
 
-- Vale Ave is closed to GA entry.
+- VIP, donor, and reserved-table guests can check in at any of the three entrances.
+- The Vale Ave entrance is for VIP, donor, and reserved-table guests only.
+- Vale Ave is not open for GA entry.
 - Overnight camping is not permitted.
+
+## Map and Seating Information
+
+Seating and venue-area information is available at https://www.sterngrove.org/seating-areas.
 
 ## Schedule
 
@@ -214,7 +222,7 @@ Service improvements:
     content: `# Stern Grove Festival - Accessibility ADA
 
 Source: sterngrove.org/accessibility-ada
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Operations / Patron Experience Team
 
 ## Overview
@@ -280,7 +288,7 @@ Hours of Operation: 11:00 AM - 5:30 PM
 
 ## Service and Support Animals
 
-- Service or support animals are allowed throughout the venue.
+- Properly documented service and support animals are allowed throughout the venue.
 - Leashed pets are allowed in the West Meadow only, not the Concert Meadow.
 
 ## Contact for Accessibility Questions
@@ -296,7 +304,7 @@ Hours of Operation: 11:00 AM - 5:30 PM
     content: `# Stern Grove Festival - What to Bring
 
 Source: sterngrove.org/what-can-i-bring
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Operations Team
 
 ## Allowed Items
@@ -307,12 +315,14 @@ Document owner: Operations Team
 - Picnics and coolers. You are welcome to bring your own food and beverages.
 - Alcohol is permitted for patrons of legal drinking age, 21+. The Festival also sells alcohol on-site.
 - Strollers are allowed, provided they are folded down during the performance and not blocking walkways or aisles.
+- Patrons may bring Narcan. Narcan is also available at the paramedic tent in the Esplanade.
+- Patrons may use phones to take photos and videos.
 
 ## Prohibited Items
 
 - Tarps of any size
 - Blankets bigger than 5x7 feet
-- Pets in the Concert Meadow. Service or support animals are allowed; leashed pets are allowed in the West Meadow only.
+- Pets in the Concert Meadow. Properly documented service and support animals are allowed; leashed pets are allowed in the West Meadow only.
 - Sharp knives with a blade longer than 4 inches
 - High-backed or standard folding chairs, large or tall tables, tents, umbrellas, and shade structures
 - Barbecues, grills, or any item with open flame
@@ -337,12 +347,14 @@ Document owner: Operations Team
     content: `# Stern Grove Festival - Seating Information
 
 Source: sterngrove.org/seating-areas
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Patron Experience / Operations Team
 
 ## Overview
 
 Most seating at Stern Grove Festival is General Admission and first-come, first-served. There are no assigned seats in General Admission areas.
+
+Seating and venue-area information is available at https://www.sterngrove.org/seating-areas.
 
 ## General Admission Seating Areas
 
@@ -373,6 +385,8 @@ Donation-based reserved seating options may include:
 
 Reserved table availability varies by show. For reserved table questions, contact development@sterngrove.org or call 415-625-6006.
 
+VIP, donor, and reserved-table guests can check in at any of the three entrances. The Vale Ave entrance is for VIP, donor, and reserved-table guests only.
+
 ## Seating Rules
 
 - Blankets may be no larger than 5x7 feet.
@@ -388,7 +402,7 @@ Reserved table availability varies by show. For reserved table questions, contac
     content: `# Stern Grove Festival - Food and Drink
 
 Source: sterngrove.org/faq, sterngrove.org/experiencefooddrink
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Patron Experience / Concessions Team
 
 ## Overview
@@ -401,6 +415,8 @@ Guests are welcome to bring picnics, coolers, food, and beverages to Stern Grove
 - You may bring your own beverages.
 - Alcohol is permitted for patrons of legal drinking age, 21+.
 - Barbecues, grills, and any items with open flame are not allowed.
+- Stern Grove Festival does not provide free water.
+- Water fountains are located near the Esplanade restrooms.
 
 ## Food and Drink On-Site
 
@@ -461,12 +477,14 @@ For jobs and employment opportunities with Stern Grove Festival, visit sterngrov
     content: `# Stern Grove Festival - Code of Conduct
 
 Source: sterngrove.org/conduct
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Human Resources / Festival Leadership
 
 ## Overview
 
 Stern Grove Festival asks everyone to treat one another with kindness and respect. Harassment is not tolerated.
+
+Everyone is welcome at Stern Grove Festival with a valid ticket and respectful behavior.
 
 ## Who Must Follow the Code of Conduct
 
@@ -493,6 +511,8 @@ The following behavior has no place at Stern Grove Festival:
 - Offensive comments
 - Unwelcome touching
 - Harassment
+- Sexual activity or explicit filming at the Festival
+- Behavior that disturbs the peace, endangers patrons, or disrupts the event
 
 ## Reporting Concerns
 
@@ -509,7 +529,7 @@ Violations may result in warnings, removal from the venue, or bans from future e
     content: `# Stern Grove Festival - General Information and Contact
 
 Source: sterngrove.org
-Last updated: April 30, 2026
+Last updated: May 15, 2026
 Document owner: Patron Experience Team
 
 ## Overview
@@ -539,6 +559,7 @@ San Francisco, CA 94123-1284
 ## Contact
 
 - Use the Ask a Staff Member button for patron support and lost-and-found questions.
+- If a patron is on site during a show day and has a complaint or needs general help, they can visit the Info Booth in the Esplanade.
 - General email: info@sterngrove.org
 - Phone: 415.252.6252
 - Reserved tables: development@sterngrove.org or 415-625-6006
@@ -546,9 +567,22 @@ San Francisco, CA 94123-1284
 
 ## Pets and Service Animals
 
-- Service or support animals are allowed throughout the venue.
+- Properly documented service and support animals are allowed throughout the venue.
 - Leashed pets are allowed in the West Meadow only.
 - Pets are not allowed in the Concert Meadow.
+
+## Emergency and Medical Support
+
+In an emergency, a patron should notify the nearest staff member, security guard, paramedic, police officer, or park ranger.
+
+- The paramedic tent is located in the Esplanade.
+- Narcan is available at the paramedic tent in the Esplanade.
+- Patrons may bring Narcan.
+- If a child is lost or missing, notify the nearest staff member, security guard, paramedic, police officer, or park ranger immediately.
+
+## Maps and Seating Information
+
+Seating and venue-area information is available at https://www.sterngrove.org/seating-areas.
 
 ## Smoking and Vaping
 
