@@ -21,6 +21,7 @@ Stern Grove Festival concerts are FREE. Entry requires a free General Admission 
 
 ### Step 1: Enter
 
+- To enter the GA lottery, visit https://www.sterngrove.org/galotterytickets. From there, choose the concert lottery you want to enter.
 - Each concert has its own separate lottery.
 - You must register individually for every show you want to attend.
 - Lotteries open on a rolling basis throughout the season, starting in early May.

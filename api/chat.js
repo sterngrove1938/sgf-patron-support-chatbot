@@ -16,6 +16,7 @@ const HIGH_RISK_PATTERNS = [
   /\b(rain.*cancel|weather.*cancel|cancelled|canceled)\b/i
 ];
 
+const LOTTERY_URL = "https://www.sterngrove.org/galotterytickets";
 const SEATING_AREAS_URL = "https://www.sterngrove.org/seating-areas";
 
 const ALLOWED_CORS_ORIGINS = [
@@ -304,6 +305,11 @@ function isReservedTablePricingQuestion(message) {
     /\b(table|tables|reserved seat|reserved seats|community table|standard table|premium table)\b.*\b(how much|cost|costs|price|prices|pricing)\b/i.test(message);
 }
 
+function isLotteryEntryQuestion(message) {
+  return /\b(lottery|ga lottery|free tickets?|free ga tickets?|general admission tickets?)\b/i.test(message) &&
+    /\b(enter|register|sign\s?up|apply|join|get|where|how|link|page)\b/i.test(message);
+}
+
 function containsAbusiveSlur(message) {
   return /\b(fags?|faggots?|dykes?|homos?|niggers?|niggas?|kikes?|spics?|chinks?|gooks?|wetbacks?|trann(?:y|ies)|retards?)\b/i.test(message);
 }
@@ -364,6 +370,10 @@ function answerFromSourcePack(message, sourceResults) {
     return "No. Sexual activity or explicit filming is not permitted at the Festival. Behavior that disturbs the peace, endangers patrons, or disrupts the event is prohibited.";
   }
 
+  if (isLotteryEntryQuestion(message)) {
+    return `To enter the GA lottery, visit the Lottery page at ${LOTTERY_URL}. From there, choose the concert lottery you want to enter. Each concert has its own separate lottery, so register for each show you want to attend.`;
+  }
+
   if (/\b(which|what).*\blottery.*\b(open|available|right now|currently)\b/i.test(message)) {
     const openLotteries = getCurrentLotteryShows();
     if (!openLotteries.length) {
@@ -387,7 +397,7 @@ function answerFromSourcePack(message, sourceResults) {
   }
 
   if (/\b(free ticket|free tickets|get.*ticket|ga lottery|general admission lottery)\b/i.test(message)) {
-    return "Stern Grove Festival concerts are free, but entry requires a free General Admission ticket obtained through a random lottery. Each concert has its own separate lottery, and you must register individually for every show you want to attend. Lotteries open on a rolling basis throughout the season, starting in early May.";
+    return `Stern Grove Festival concerts are free, but entry requires a free General Admission ticket obtained through a random lottery. Visit the Lottery page at ${LOTTERY_URL} to choose the concert lottery you want to enter. Each concert has its own separate lottery, so register for each show you want to attend.`;
   }
 
   if (/\b(kids|children|child|infant|baby).*\b(ticket|tickets|own ticket)\b/i.test(message)) {
